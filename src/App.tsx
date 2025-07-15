@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { Wallet } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -21,10 +22,11 @@ function App() {
           <CardDescription>Card Description</CardDescription>
           <CardAction>Card Action</CardAction>
         </CardHeader>
-        <CardContent className="h-[80%]">
+        <CardContent className="h-[80%] space-y-2">
+          <Skeleton className="w-[118px] h-[118px] rounded-lg mx-auto bg-muted/20 backdrop-blur-lg" />
           <div className="space-y-[20px]">
-            <Input className="border-muted/10" />
-            <Input className="border-muted/10" />
+            <Input className="border-muted/10" placeholder="M3ter ID" />
+            <Input className="border-muted/10" placeholder="Amount" />
           </div>
         </CardContent>
         <CardFooter>
