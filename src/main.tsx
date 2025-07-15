@@ -18,6 +18,18 @@ globalThis.Buffer = Buffer;
 
 const queryClient = new QueryClient();
 
+const Layout = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="w-full h-[100vh] p-4">
+      <header className="h-[20px]">
+        <h1 className="font-bold text-[#FCFF52] text-2xl">Celo Mini app</h1>
+      </header>
+      {children}
+      <footer className="h-[20px]"></footer>
+    </div>
+  );
+};
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <WagmiProvider config={config}>
@@ -25,7 +37,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <RainbowKitProvider
           theme={{ lightMode: lightTheme(), darkMode: darkTheme() }}
         >
-          <App />
+          <Layout>
+            <App />
+          </Layout>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
