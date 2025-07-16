@@ -11,8 +11,24 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Wallet } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
+//@ts-ignore
+import { M3terHead, m3terAlias } from "m3ters";
+
+// Helper function to capitalize each word's first letter
+const capitalizeWords = (str: string) => {
+  if (!str) return "";
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
 
 function App() {
+  const [formState, _setFormState] = useState({
+    amount: "",
+    id: "",
+  });
   return (
     <div className="w-full h-full flex justify-center items-center">
       <Card className="md:w-[450px] sm:w-[350px] w-[300px] h-[400px] bg-white/10 backdrop-blur-lg border-0 text-white">
@@ -22,11 +38,20 @@ function App() {
           <CardAction>Card Action</CardAction>
         </CardHeader>
         <CardContent className="h-[80%] space-y-2">
-          <Skeleton className="w-[118px] h-[118px] rounded-lg mx-auto bg-muted/20 backdrop-blur-lg" />
-          <div className="space-y-[20px]">
+          {formState.id ? (
+            <>
+              <M3terHead seed={formState.id} size={100} />
+              <p className="text-[13px] font-bold text-green-400 gap-2">
+                {capitalizeWords(m3terAlias(formState.id))}
+              </p>
+            </>
+          ) : (
+            <Skeleton className="w-[118px] h-[118px] rounded-lg" />
+          )}
+          <form className="space-y-[20px]">
             <Input className="border-muted/10" placeholder="M3ter ID" />
             <Input className="border-muted/10" placeholder="Amount" />
-          </div>
+          </form>
         </CardContent>
         <CardFooter>
           <ConnectButton.Custom>
