@@ -25,10 +25,30 @@ const capitalizeWords = (str: string) => {
 };
 
 function App() {
-  const [formState, _setFormState] = useState({
+  const [formState, setFormState] = useState({
     amount: "",
     id: "",
   });
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (
+      !/[0-9.]/.test(e.key) &&
+      e.key !== "Backspace" &&
+      e.key !== "Delete" &&
+      e.key !== "ArrowLeft" &&
+      e.key !== "ArrowRight"
+    ) {
+      e.preventDefault();
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
   return (
     <div className="w-full h-full flex justify-center items-center">
       <Card className="md:w-[450px] sm:w-[350px] w-[300px] h-[400px] bg-white/10 backdrop-blur-lg border-0 text-white">
@@ -39,18 +59,36 @@ function App() {
         </CardHeader>
         <CardContent className="h-[80%] space-y-2">
           {formState.id ? (
-            <>
+            <div className="w-full flex flex-col items-center">
               <M3terHead seed={formState.id} size={100} />
               <p className="text-[13px] font-bold text-green-400 gap-2">
                 {capitalizeWords(m3terAlias(formState.id))}
               </p>
-            </>
+            </div>
           ) : (
-            <Skeleton className="w-[118px] h-[118px] rounded-lg" />
+            <Skeleton className="w-[118px] h-[118px] rounded-lg mx-auto" />
           )}
           <form className="space-y-[20px]">
-            <Input className="border-muted/10" placeholder="M3ter ID" />
-            <Input className="border-muted/10" placeholder="Amount" />
+            <Input
+              name="id"
+              type="text"
+              className="border-muted/10"
+              placeholder="M3ter ID"
+              value={formState.id}
+              inputMode={`numeric`}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+            />
+            <Input
+              name="amount"
+              type="text"
+              className="border-muted/10"
+              placeholder="Amount"
+              inputMode={`numeric`}
+              value={formState.amount}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+            />
           </form>
         </CardContent>
         <CardFooter>
