@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Wallet } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 //@ts-ignore
@@ -50,8 +49,8 @@ function App() {
     }));
   };
   return (
-    <div className="w-full h-full flex justify-center items-center">
-      <Card className="md:w-[450px] sm:w-[350px] w-[300px] h-[400px] bg-white/10 backdrop-blur-lg border-0 text-white">
+    <div className="w-full h-[calc(100%-76px)] flex justify-center items-center">
+      <Card className="md:w-[450px] sm:w-[350px] w-[300px] h-[400px] bg-[#0C0C0C]/10 border border-neutral-400 text-white">
         <CardHeader className="hidden">
           <CardTitle>Card Title</CardTitle>
           <CardDescription>Card Description</CardDescription>
@@ -66,7 +65,7 @@ function App() {
               </p>
             </div>
           ) : (
-            <Skeleton className="w-[118px] h-[118px] rounded-lg mx-auto" />
+            <Skeleton className="w-[118px] h-[118px] rounded-full mx-auto" />
           )}
           <form className="space-y-[20px]">
             <Input
@@ -97,9 +96,9 @@ function App() {
               <button
                 type="button"
                 onClick={openConnectModal}
-                className="flex gap-2 items-center text-black bg-[#FCFF52] px-4 w-full font-bold justify-center h-[35px] rounded-2xl mx-auto cursor-pointer hover:opacity-80"
+                className="flex gap-2 items-center text-black bg-[#FCFF52] px-4 w-full font-bold justify-center h-[35px] rounded-lg mx-auto cursor-pointer hover:opacity-80"
               >
-                <span>Connect</span> <Wallet className="h-5 w-5" />
+                Connect Wallet
               </button>
             )}
           </ConnectButton.Custom>

@@ -20,12 +20,18 @@ const queryClient = new QueryClient();
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="w-full h-[100vh] p-4">
-      <header className="h-[20px]">
-        <h1 className="font-bold text-[#FCFF52] text-2xl">Celo Mini app</h1>
+    <div className="w-full h-[100vh]">
+      <header className="h-[20px] p-4">
+        <h1 className="font-bold text-[#FCFF52] text-[20px] underline">
+          RE-CHARGE
+        </h1>
       </header>
       {children}
-      <footer className="h-[20px]"></footer>
+      <footer className="h-[40px] bg-white/10 backdrop-blur-lg flex justify-center items-center">
+        <p className="text-[#FCFF52] font-semibold block">
+          BUILT ON THE M3TERING PROTOCOL
+        </p>
+      </footer>
     </div>
   );
 };
