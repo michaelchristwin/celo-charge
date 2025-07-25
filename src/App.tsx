@@ -1,16 +1,10 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { BackgroundGradient } from "./components/ui/background-gradient";
+import { useAccount } from "wagmi";
+import { Send, Zap } from "lucide-react";
 //@ts-ignore
 import { M3terHead, m3terAlias } from "m3ters";
 
@@ -24,6 +18,7 @@ const capitalizeWords = (str: string) => {
 };
 
 function App() {
+  const { isDisconnected } = useAccount();
   const [formState, setFormState] = useState({
     amount: "",
     id: "",
@@ -48,15 +43,17 @@ function App() {
       [name]: value,
     }));
   };
+
+  // Sample tariff rate (price per kWh)
+  const tariffRate = 0.25; // $0.25 per kWh
+
+  const units = useMemo(() => {
+    return tariffRate * Number(formState.amount);
+  }, [formState.amount]);
   return (
     <div className="w-full h-[calc(100%-76px)] flex justify-center items-center">
-      <Card className="md:w-[450px] sm:w-[350px] w-[300px] h-[400px] bg-[#0C0C0C]/10 border border-neutral-400 text-white">
-        <CardHeader className="hidden">
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-          <CardAction>Card Action</CardAction>
-        </CardHeader>
-        <CardContent className="h-[80%] space-y-2">
+      <BackgroundGradient className="md:w-[450px] sm:w-[350px] w-[300px] min-h-[390px] bg-[#171717] rounded-[22px] text-white p-4 flex flex-col justify-center items-center">
+        <div className="h-[80%] space-y-4 w-[95%]">
           {formState.id ? (
             <div className="w-full flex flex-col items-center">
               <M3terHead seed={formState.id} size={100} />
@@ -67,43 +64,91 @@ function App() {
           ) : (
             <Skeleton className="w-[118px] h-[118px] rounded-full mx-auto" />
           )}
-          <form className="space-y-[20px]">
+          <form className="space-y-[30px]">
             <Input
               name="id"
               type="text"
-              className="border-muted/10"
-              placeholder="M3ter ID"
+              className="border-[#FCFF52]/30 placeholder:text-[#FCFF52]/30 h-[45px] font-semibold text-lg"
+              placeholder="M3TER ID"
               value={formState.id}
               inputMode={`numeric`}
               onChange={handleChange}
               onKeyDown={handleKeyDown}
             />
-            <Input
-              name="amount"
-              type="text"
-              className="border-muted/10"
-              placeholder="Amount"
-              inputMode={`numeric`}
-              value={formState.amount}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-            />
-          </form>
-        </CardContent>
-        <CardFooter>
-          <ConnectButton.Custom>
-            {({ openConnectModal }) => (
-              <button
-                type="button"
-                onClick={openConnectModal}
-                className="flex gap-2 items-center text-black bg-[#FCFF52] px-4 w-full font-bold justify-center h-[35px] rounded-lg mx-auto cursor-pointer hover:opacity-80"
+            <fieldset className="relative">
+              <span className="absolute left-3 top-[35%] transform -translate-y-1/2 text-[#FCFF52] text-lg">
+                $
+              </span>
+              <Input
+                name="amount"
+                type="text"
+                className="border-[#FCFF52]/30 placeholder:text-[#FCFF52]/30 h-[45px] font-semibold pl-7 text-lg"
+                placeholder="AMOUNT"
+                inputMode={`numeric`}
+                value={formState.amount}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+              />
+              <p className="text-xs text-[#FCFF52]/30 mt-1">
+                Rate: ${tariffRate}/kWh
+              </p>
+            </fieldset>
+            {formState.amount && (
+              <div
+                className="transform transition-all duration-500 ease-out animate-in slide-in-from-bottom-4 fade-in"
+                style={{
+                  animation: "slideInUp 0.5s ease-out forwards",
+                }}
               >
-                Connect Wallet
+                <div className="bg-[#011222] border border-[#FCFF52]/30 rounded-xl p-4 text-center">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <Zap className="w-5 h-5 text-green-600" />
+                    <span className="text-sm font-medium text-green-600">
+                      Gets you:
+                    </span>
+                  </div>
+                  <div className="text-2xl font-bold text-green-600">
+                    {units.toFixed(2)}{" "}
+                    <span className="text-lg font-normal">kWh</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            {isDisconnected ? (
+              <ConnectButton.Custom>
+                {({ openConnectModal }) => (
+                  <button
+                    type="button"
+                    onClick={openConnectModal}
+                    className="flex items-center text-black bg-[#FCFF52] px-4 w-full font-bold justify-center h-[35px] rounded-lg mx-auto cursor-pointer hover:opacity-80"
+                  >
+                    Connect Wallet
+                  </button>
+                )}
+              </ConnectButton.Custom>
+            ) : (
+              <button
+                type="submit"
+                className="flex items-center text-black bg-[#FCFF52] px-4 w-full font-bold justify-center h-[35px] rounded-lg mx-auto cursor-pointer hover:opacity-80 gap-2"
+              >
+                <span>PAY</span> <Send />
               </button>
             )}
-          </ConnectButton.Custom>
-        </CardFooter>
-      </Card>
+          </form>
+        </div>
+      </BackgroundGradient>
+      <style>{`
+        @keyframes slideInUp {
+          0% {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+      `}</style>
     </div>
   );
 }
