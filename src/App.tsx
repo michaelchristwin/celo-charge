@@ -19,9 +19,12 @@ const capitalizeWords = (str: string) => {
 
 function App() {
   const { isDisconnected } = useAccount();
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  const amount = params.get("amount");
   const [formState, setFormState] = useState({
-    amount: "",
-    id: "",
+    amount: amount || "",
+    id: id || "",
   });
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
