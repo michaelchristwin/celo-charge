@@ -5,6 +5,9 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    allowedHosts: ["wishlist-reasoning-champion-breaking.trycloudflare.com"],
+  },
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

@@ -23,7 +23,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="w-full h-[100vh]">
       <header className="h-[20px] p-4 flex justify-between items-center">
-        <h1 className="font-bold text-[#FCFF52] text-[20px]">RE-CHARGE</h1>
+        <h1 className="font-bold text-[#FCFF52] md:text-[20px] text-[17px]">
+          RE-CHARGE
+        </h1>
         {isConnected && (
           <div className="flex justify-between items-center h-[20px]">
             <button
