@@ -1,12 +1,14 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
-import { useMemo, useState } from "react";
+import { FormEvent, useCallback, useMemo, useState } from "react";
 import { BackgroundGradient } from "./components/ui/background-gradient";
-import { useAccount } from "wagmi";
+import { useAccount, useWriteContract } from "wagmi";
 import { Send, Zap } from "lucide-react";
 //@ts-ignore
 import { M3terHead, m3terAlias } from "m3ters";
+import { contractConfig } from "./wagmi";
+import { parseEther } from "viem";
 
 // Helper function to capitalize each word's first letter
 const capitalizeWords = (str: string) => {
@@ -19,6 +21,7 @@ const capitalizeWords = (str: string) => {
 
 function App() {
   const { isDisconnected } = useAccount();
+  const { data: hash, writeContract } = useWriteContract();
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
   const amount = params.get("amount");
@@ -47,6 +50,18 @@ function App() {
     }));
   };
 
+  const handleSubmit = useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      writeContract({
+        ...contractConfig,
+        functionName: "pay",
+        value: parseEther(formState.amount),
+        args: [BigInt(formState.id)],
+      });
+    },
+    [writeContract, formState.amount, formState.id]
+  );
   // Sample tariff rate (price per kWh)
   const tariffRate = 0.25; // $0.25 per kWh
 
@@ -67,7 +82,7 @@ function App() {
           ) : (
             <Skeleton className="w-[118px] h-[118px] rounded-full mx-auto" />
           )}
-          <form className="space-y-[30px]">
+          <form className="space-y-[30px]" onSubmit={handleSubmit}>
             <Input
               name="id"
               type="text"

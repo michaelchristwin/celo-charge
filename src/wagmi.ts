@@ -14,7 +14,7 @@ declare module "wagmi" {
   }
 }
 
-export const contract = {
+export const contractConfig = {
   address: "0x86925C4C97E6765f76408fb6c61152300dec6426",
   abi,
 } as const;
