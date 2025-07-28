@@ -56,8 +56,7 @@ function App() {
       writeContract({
         ...contractConfig,
         functionName: "pay",
-        value: parseEther(formState.amount),
-        args: [BigInt(formState.id)],
+        args: [BigInt(formState.id), parseEther(formState.amount)],
       });
     },
     [writeContract, formState.amount, formState.id]
