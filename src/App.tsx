@@ -1,9 +1,8 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
-import { FormEvent, useCallback, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { BackgroundGradient } from "./components/ui/background-gradient";
-import { useAccount, useWriteContract } from "wagmi";
+import { useConnect, useWriteContract } from "wagmi";
 import { Send, Zap } from "lucide-react";
 //@ts-ignore
 import { M3terHead, m3terAlias } from "m3ters";
@@ -20,7 +19,7 @@ const capitalizeWords = (str: string) => {
 };
 
 function App() {
-  const { isDisconnected } = useAccount();
+  const { connect, connectors } = useConnect();
   const { writeContract } = useWriteContract();
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -63,6 +62,10 @@ function App() {
   );
   // Sample tariff rate (price per kWh)
   const tariffRate = 0.25; // $0.25 per kWh
+
+  useEffect(() => {
+    connect({ connector: connectors[0] });
+  }, []);
 
   const units = useMemo(() => {
     return tariffRate * Number(formState.amount);
@@ -131,26 +134,12 @@ function App() {
                 </div>
               </div>
             )}
-            {isDisconnected ? (
-              <ConnectButton.Custom>
-                {({ openConnectModal }) => (
-                  <button
-                    type="button"
-                    onClick={openConnectModal}
-                    className="flex items-center text-black bg-[#FCFF52] px-4 w-full font-bold justify-center h-[35px] rounded-lg mx-auto cursor-pointer hover:opacity-80"
-                  >
-                    Connect Wallet
-                  </button>
-                )}
-              </ConnectButton.Custom>
-            ) : (
-              <button
-                type="submit"
-                className="flex items-center text-black bg-[#FCFF52] px-4 w-full font-bold justify-center h-[35px] rounded-lg mx-auto cursor-pointer hover:opacity-80 gap-2"
-              >
-                <span>PAY</span> <Send />
-              </button>
-            )}
+            <button
+              type="submit"
+              className="flex items-center text-black bg-[#FCFF52] px-4 w-full font-bold justify-center h-[35px] rounded-lg mx-auto cursor-pointer hover:opacity-80 gap-2"
+            >
+              <span>PAY</span> <Send />
+            </button>
           </form>
         </div>
       </BackgroundGradient>

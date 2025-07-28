@@ -1,11 +1,16 @@
-import { getDefaultConfig } from "@rainbow-me/rainbowkit";
-import { celo, celoAlfajores } from "wagmi/chains";
 import abi from "@/ABI/contract-abi.json";
+import { createConfig, http, injected } from "wagmi";
+import { celoAlfajores, celo } from "wagmi/chains";
 
-export const config = getDefaultConfig({
-  appName: "Recharge",
-  projectId: import.meta.env.VITE_WC_PROJECT_ID,
+export const config = createConfig({
   chains: [celo, celoAlfajores],
+  connectors: [
+    injected(), // should be listed first
+  ],
+  transports: {
+    [celo.id]: http(),
+    [celoAlfajores.id]: http(),
+  },
 });
 
 declare module "wagmi" {
