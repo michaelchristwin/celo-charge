@@ -21,7 +21,7 @@ const capitalizeWords = (str: string) => {
 
 function App() {
   const { isDisconnected } = useAccount();
-  const { data: hash, writeContract } = useWriteContract();
+  const { writeContract } = useWriteContract();
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
   const amount = params.get("amount");
